@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/now-ui-kit.css}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <link th:href="@{/assets/css/timetable-stylesheet.css}" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-transparent">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <img src="assets/menuIcon.svg" width="20px" height="20px" style="max-width: none !important;">
+        </button>
+        <img src="assets/BotLogo.svg" width="50" height="50">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-left: 20px !important">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Dashboard</a>
+                </li> -->
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Subscription</a>
+                </li> -->
+            </ul>
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    Documentation
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Commands</a>
+                    <a class="dropdown-item" href="#">Tutorials</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Server settings</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" th:href="@{/about}">About</a>
+            </div>
+            <a href="./login.html"><button class="btn login-btn btn-outline-accent my-2 my-sm-0"
+                    style="font-size: 10px !important;font-family: poppins !important;">LOGIN</button></a>
+        </div>
+    </nav>
+    <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content;">
+        <table class="rwd-table">
+            <tr style="color: yellow;">
+                <th></th>
+                <th>9:00</th>
+                <th>10:00</th>
+                <th>11:00</th>
+                <th>12:00</th>
+                <th>01:00</th>
+                <th>02:00</th>
+                <th>03:00</th>
+                <th>04:00</th>
+                <th>05:00</th>
+            </tr>
+            <tr th:each="day: ${time_table}">
+                <td class="days"></td>
+                <td th:each="slot:${day}">
+                    <span th:each="var:${slot.list_lectures}">
+                        <span th:if="${var != 'none' && var!= null}">
+                            <button th:if="${var != 'none' && var!= null && var != ' '}"> <span
+                                    th:text="${var != 'none'? var: ''}"></span>
+                            </button>
+                            <br>
+                        </span>
+                    </span>
+                </td>
+                <!-- <td> <a role="button" class="update" th:href="@{/form2(name = ${grade.name})}">Update</a> </td> -->
+            </tr>
+        </table>
+    </div>
+    <script th:src="@{/assets/js/days.js}"></script>
+</body>
+
+</html>

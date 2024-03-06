@@ -1,0 +1,13 @@
+.Float {
+    float: left;
+    width: 40%;
+    height: 10%;
+}
+
+@media (min-width :760px) {
+    .m-md-3-dup {
+        margin-left: 2rem;
+        margin-right: 2rem;
+    }
+}
+
