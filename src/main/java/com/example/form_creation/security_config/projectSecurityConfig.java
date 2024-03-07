@@ -24,7 +24,7 @@ public class projectSecurityConfig {
             // .formLogin(Customizer.withDefaults())
             // .httpBasic(Customizer.withDefaults());
         http.csrf((csrf) -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
-        .authorizeHttpRequests((requests) -> requests.requestMatchers("/home", "/login").permitAll()
+        .authorizeHttpRequests((requests) -> requests.requestMatchers("/home", "/login","/**").permitAll()
         .requestMatchers("/assets/**").permitAll()
         .requestMatchers("/timetable").permitAll()
         .requestMatchers(PathRequest.toH2Console()).permitAll())

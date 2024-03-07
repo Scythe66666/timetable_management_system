@@ -14,47 +14,8 @@
     <link th:href="@{/assets/css/timetable-stylesheet.css}" rel="stylesheet">
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-lg bg-transparent">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <img src="assets/menuIcon.svg" width="20px" height="20px" style="max-width: none !important;">
-        </button>
-        <img src="assets/BotLogo.svg" width="50" height="50">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-left: 20px !important">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#/">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="#">Dashboard</a>
-                </li> -->
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="#">Subscription</a>
-                </li> -->
-            </ul>
-            <div class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    Documentation
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Commands</a>
-                    <a class="dropdown-item" href="#">Tutorials</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Server settings</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                <a class="nav-link" th:href="@{/about}">About</a>
-            </div>
-            <a href="./login.html"><button class="btn login-btn btn-outline-accent my-2 my-sm-0"
-                    style="font-size: 10px !important;font-family: poppins !important;">LOGIN</button></a>
-        </div>
-    </nav>
+<body> 
+    <div th:replace="~{header::nav}"></div>
     <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content;">
         <table class="rwd-table">
             <tr style="color: yellow;">
@@ -70,7 +31,7 @@
                 <th>05:00</th>
             </tr>
             <tr th:each="day: ${time_table}">
-                <td class="days"></td>
+                <td class="days" style="color: yellow; font-weight: bold;"></td>
                 <td th:each="slot:${day}">
                     <span th:each="var:${slot.list_lectures}">
                         <span th:if="${var != 'none' && var!= null}">
