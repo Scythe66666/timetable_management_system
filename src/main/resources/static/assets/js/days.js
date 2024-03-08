@@ -5,4 +5,7 @@ console.log("the elements of the list are "+ list);
 list.forEach(function(element){
     element.textContent = days[i++];
 });
+var view_button = document.querySelector("select");
+
+
 

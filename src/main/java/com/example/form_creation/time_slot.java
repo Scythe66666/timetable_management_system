@@ -1,6 +1,9 @@
 package com.example.form_creation;
-import java.util.ArrayList;
+
+import java.sql.*;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class time_slot {
     public List<String> list_lectures = new ArrayList<>();
@@ -38,5 +41,4 @@ public class time_slot {
             "}";
     }
 
-    
 }
