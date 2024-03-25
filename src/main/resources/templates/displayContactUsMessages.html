@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/now-ui-kit.css}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <link th:href="@{/assets/css/timetable-stylesheet.css}" rel="stylesheet">
+</head>
+
+</head>
+
+<body>
+    <div style="display: block; position: relative;" th:insert="~{header::nav}">
+    </div>
+    <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content;">
+        <table class="rwd-table">
+            <tr style="color: yellow;">
+                <th>Name </th>
+                <th>Message</th>
+                <th>Contact </th>
+                <th>Email </th>
+            </tr>
+            <tr th:each="message: ${list}">
+                <td th:text="${message.Name}"></td>
+                <td th:text="${message.Message}"></td>
+                <td th:text="${message.number}"></td>
+                <td th:text="${message.Email}"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
