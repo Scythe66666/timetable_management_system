@@ -14,7 +14,7 @@
     <link th:href="@{/assets/css/timetable-stylesheet.css}" rel="stylesheet">
 </head>
 
-<body> 
+<body>
     <div th:replace="~{header::nav}"></div>
     <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content;">
         <table class="rwd-table">
@@ -34,11 +34,16 @@
                 <td class="days" style="color: yellow; font-weight: bold;"></td>
                 <td th:each="slot:${day}">
                     <span th:each="var:${slot.list_lectures}">
-                        <span th:if="${var != 'none' && var!= null}">
-                            <button th:if="${var != 'none' && var!= null && var != ' '}"> <span
-                                    th:text="${var != 'none'? var: ''}"></span>
-                            </button>
+                        <!-- <span th:if="${var != 'none' && var!= null}"> -->
+                        <span class="non-Empty" th:if="${var != 'none'}">
+                            <span th:text="${var != 'none'? var: ''}"></span>
                             <br>
+                        </span>
+                        <span th:if="${var == 'none' || var == null}">
+                            <form th:if="${option == '1'}" th:action = "@{/add_lecture}" method="post">
+                                <input type ="text" th:value = "${slot.id}" style="display: inline;" name="id" readonly>
+                                <button type = "submit"></button> 
+                            </form>
                         </span>
                     </span>
                 </td>
@@ -46,13 +51,25 @@
             </tr>
         </table>
     </div>
+    <div style="display: flex; justify-content: center;">
+        <div class="flex-containerr">
+            <div class="box">
+                <a th:href="@{'/timetable?option=1'}">Arrange a lecture</a>
+            </div>
+            <div class="box">
+                <a th:href="@{'/timetable?option=2'}">cancel a lecture</a>
+            </div>
+            <div class="box">
+                <a th:href="@{'/timetable?option=3'}">reschedule a lecture</a>
+            </div>
+            <div></div>
+        </div>
+    </div>
+    <span th:if="${option == '1'}">
+        <script th:src="@{/assets/js/add_lecture.js}"></script>
+    </span>
     <script th:src="@{/assets/js/days.js}"></script>
-    <select id="fruits">
-        <option value="apple">Apple</option>
-        <option value="banana">Banana</option>
-        <option value="orange">Orange</option>
-        <option value="grape">Grape</option>
-      </select>
+    <!-- <script th:src="@{/assets/js/add_lecture.js}"></script> -->
 </body>
 
 </html>

@@ -32,4 +32,16 @@ public class timetable_repo {
         List <lecture> l = template.query(sql, rm);
         return l;
     }
+
+    public void delete(String Subject, String Day, int start_time)
+    {
+        String sql = "DELETE FROM timetable WHERE start_time = ? AND  Subject = ? AND Day = ?";
+        int rows = template.update(sql, start_time, Subject, Day);
+    }
+
+    public void insert(String Subject, String Day, int start_time, String Classroom){
+        String sql = "insert into timetable (Subject, Day, start_time, Classroom) values (?, ?, ?, ?)";
+        int rows = template.update(sql, Subject, Day, start_time, Classroom);
+        System.out.println("the insert operation in the database is complete and the rows affected are " + rows);
+    }
 }

@@ -10,6 +10,12 @@ public class timetable_service_layer {
     @Autowired
     timetable_repo rp;
 
+    public void add_lecture(String Subject, String Day, int start_time, String Classroom)
+    {
+        rp.delete("none", Day, start_time);
+        rp.insert(Subject, Day, start_time, Classroom); 
+    }
+
     public time_slot[][] create_time_table() {
         time_slot[][] days = new time_slot[7][];
         String query = "select * from timetable";

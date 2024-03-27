@@ -1,11 +1,17 @@
 package com.example.form_creation;
 
-import java.sql.*;
-import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Getter 
+@Setter
 public class time_slot {
+    public final String id;
     public List<String> list_lectures = new ArrayList<>();
     public List<String> list_classrooms = new ArrayList<>();
     int i = 0;
@@ -18,19 +24,7 @@ public class time_slot {
         return i;
     }
     public time_slot() {
-        
-    }
-
-    public List<String> getList_classrooms() {
-        return this.list_classrooms;
-    }
-
-    public List<String> getList_lectures() {
-        return this.list_lectures;
-    }
-
-    public void setList_lectures(List<String> list_lectures) {
-        this.list_lectures = list_lectures;
+        id = UUID.randomUUID().toString();
     }
 
     @Override

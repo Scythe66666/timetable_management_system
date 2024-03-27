@@ -17,7 +17,7 @@ public class saveContactRepository {
 
     public void saveMessage(Contact contact)
     {
-        String sql = "insert into ContactUs (message, name , phone_number, email) values (?, ?, ?)";
+        String sql = "insert into ContactUs (message, name , phone_number, email) values (?, ?, ?, ?)";
         template.update(sql, contact.getMessage(), contact.getName(), contact.getNumber(), contact.getEmail());
     }
 
