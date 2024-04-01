@@ -20,6 +20,11 @@ public class time_slot {
         list_lectures.add(subject);
         list_classrooms.add(classroom);
     }
+    public boolean delete_lecture(String subject)
+    {
+        return list_lectures.remove(subject); 
+    }
+
     public int geti(){
         return i;
     }

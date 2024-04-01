@@ -36,14 +36,25 @@
                     <span th:each="var:${slot.list_lectures}">
                         <!-- <span th:if="${var != 'none' && var!= null}"> -->
                         <span class="non-Empty" th:if="${var != 'none'}">
-                            <span th:text="${var != 'none'? var: ''}"></span>
-                            <br>
+                            <span th:if="${option != '2'}">
+                                <span th:text="${var != 'none'? var: ''}"></span>
+                            </span>
+                            <span th:if="${option == '2'}" style="margin: 0; padding: 0;">
+                                <form th:action="@{'/cancelLecture?lecName=' + ${var}}" style="margin: 0; padding: 0;"
+                                    method="post">
+                                    <input type="text" th:value="${slot.id}" style="display: none;" name="id">
+                                    <button type="submit"><span th:text="${var}"></span></button>
+                                </form>
+                            </span>
                         </span>
+                        <br>
                         <span th:if="${var == 'none' || var == null}">
-                            <form th:if="${option == '1'}" th:action = "@{/add_lecture}" method="post">
-                                <input type ="text" th:value = "${slot.id}" style="display: inline;" name="id" readonly>
-                                <button type = "submit"></button> 
-                            </form>
+                            <span th:if="${option == '1'}">
+                                <form th:action="@{'/add_lecture'}" method="post">
+                                    <input type="text" th:value="${slot.id}" style="display: none;" name="id">
+                                    <button type="submit"></button>
+                                </form>
+                            </span>
                         </span>
                     </span>
                 </td>
@@ -62,7 +73,6 @@
             <div class="box">
                 <a th:href="@{'/timetable?option=3'}">reschedule a lecture</a>
             </div>
-            <div></div>
         </div>
     </div>
     <span th:if="${option == '1'}">

@@ -5,12 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.form_creation.Model.UserInfo;
 import com.example.form_creation.service.security_services;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 
 @Controller
@@ -32,8 +29,10 @@ public class login_page {
     }
     @GetMapping("/signup")
     public String getMethodName(Model model) {
-        model.addAttribute("Userinfo", new UserInfo(1, "asfaf", "fasdaf", "asfdasdf","fafad"));
+        model.addAttribute("Userinfo", new UserInfo());
         return "signup";
     }
+
+    
     
 }

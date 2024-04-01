@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 public class timetable_service_layer {
     @Autowired
     timetable_repo rp;
+    public void cancel_lecture(String subject, String Day, int start_time)
+    {
+        rp.delete(subject, Day, start_time);
+    }
 
     public void add_lecture(String Subject, String Day, int start_time, String Classroom)
     {
@@ -74,5 +78,11 @@ public class timetable_service_layer {
         }
 
         return days;
+    }
+
+    public List<String> getListOfColumns(String column) 
+    {
+        List<String> l = rp.getSubjects(column);
+        return l;
     }
 }

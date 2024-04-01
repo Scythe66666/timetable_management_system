@@ -116,4 +116,12 @@ button{
   color: inherit;
   /* Reset other properties as needed */
 }
+.non-Empty > form{
+  margin: 0; 
+  padding: 0;
+}
 
+.non-Empty > button{
+  margin: 0; 
+  padding: 0;
+}
