@@ -3,14 +3,20 @@ package com.example.form_creation.security_config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
+@EnableMethodSecurity
+@EnableWebSecurity
 public class projectSecurityConfig {
 
     @Bean
@@ -23,12 +29,12 @@ public class projectSecurityConfig {
         // http.authorizeHttpRequests(requests -> requests.anyRequest().denyAll())
             // .formLogin(Customizer.withDefaults())
             // .httpBasic(Customizer.withDefaults());
-        http.csrf((csrf) -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
+        http.csrf((csrf) -> csrf.ignoringRequestMatchers(PathRequest.toH2Console())/* .disable()*/)
         .authorizeHttpRequests((requests) -> requests.requestMatchers("/home", "/login","/**").permitAll()
         .requestMatchers("/assets/**").permitAll()
-        .requestMatchers("/timetable").permitAll()
+        .requestMatchers("/signup").permitAll()
         .requestMatchers(PathRequest.toH2Console()).permitAll())
-        .formLogin(loginConfigurer -> loginConfigurer.loginPage("/login1")
+        .formLogin(loginConfigurer -> loginConfigurer.loginPage("/login")
             .defaultSuccessUrl("/dashboard").failureUrl("/login1?error=true").permitAll())
         .logout(logoutConfigurer -> logoutConfigurer.logoutSuccessUrl("/login1?logout=true")
             .invalidateHttpSession(true).permitAll())
@@ -36,25 +42,38 @@ public class projectSecurityConfig {
         ;
         return http.build();
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
     /**
      * @return
      */
     @Bean
-    public InMemoryUserDetailsManager userDetailsService()
+    public UserDetailsService userDetailsService()
     {
-        UserDetails user = User.withDefaultPasswordEncoder()
-        .username("user")
-        .password("12345")
-        .roles("USER")
-        .build();
-        
-        UserDetails admin = User.withDefaultPasswordEncoder()
-        .username("admin")
-        .password("1122334455")
-        .roles("USER", "ADMIN")
-        .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
+        // UserDetails user = User.withDefaultPasswordEncoder()
+        // .username("user")
+        // .password("12345")
+        // .roles("USER")
+        // .build();
+        // UserDetails admin = User.withDefaultPasswordEncoder()
+        // .username("admin")
+        // .password("1122334455")
+        // .roles("USER", "ADMIN")
+        // .build();
+        // return new InMemoryUserDetailsManager(user, admin);
+        return new UserInfoUserDetailsService();
     }
     
 }
