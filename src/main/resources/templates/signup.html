@@ -32,10 +32,10 @@
 
     <!-- FORMULAIRE -->
     <form class="form" th:object="${Userinfo}"th:action="@{'/new'}" method="post" >
-      <input type="email" placeholder="Email Adress" class="email" th:field="*{email}">
-      <input type="text" placeholder="Name" class="email" th:field="*{name}">
-      <input type="text" placeholder="password" class="pass" th:field="*{password}">
-      <input type="text" placeholder="roles"  th:field="*{roles}">
+      <input type="email" placeholder="Email Adress" class="email" th:field="*{email}" name="email">
+      <input type="text" placeholder="Name" class="email" th:field="*{name}" name ="name">
+      <input type="text" placeholder="password" class="pass" th:field="*{password}" name="password">
+      <input type="text" placeholder="roles"  th:field="*{roles}" name="roles">
 
       <!-- MOT DE PASSE OUBLIE ? -->
       <!-- <a href="#" class="fp">Forgot password?</a> -->

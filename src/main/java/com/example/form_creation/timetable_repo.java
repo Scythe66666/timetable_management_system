@@ -23,7 +23,7 @@ public class timetable_repo {
         @Override
         public lecture mapRow(ResultSet rs, int rowNum) throws SQLException {
             lecture l = new lecture(rs.getString("Subject"), rs.getString("Classroom"), rs.getString("Day"),
-                    rs.getInt("serial_no"), rs.getString("Batch"), rs.getInt("start_time"));
+                    rs.getInt("serial_no"), rs.getInt("start_time"), rs.getString("CLASS"));
             return l;
         }
     };
@@ -34,31 +34,49 @@ public class timetable_repo {
             return l;
         }
     };
-    String sql = "select * from timetable";
+    
+    RowMapper<String> r3 = new RowMapper<String>() {
+        @Override
+        public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+            String l = rs.getString("Class");
+            return l;
+        }
+    };
+    // String sql = "select * from timetable";
 
     public List<lecture> getAll(String sql) {
         List<lecture> l = template.query(sql, rm);
         return l;
     }
+    
+    public List<String> getClasses(){
+        String sql = "SELECT DISTINCT Class from main";
 
-    public List<String> getSubjects(String column){
-        String sql = "SELECT DISTINCT "+column+" from timetable";
+        List <String> l = template.query(sql, r3);
+        return l;
+    }
+
+    public List<String> getSubjects(){
+        String sql = "SELECT DISTINCT Subject from main";
 
         List <String> l = template.query(sql, r2);
         return l;
     }
 
     public void delete(String Subject, String Day, int start_time) {
-        String sql = "DELETE FROM timetable WHERE start_time = ? AND  Subject = ? AND Day = ?";
+        String sql = "DELETE FROM main WHERE start_time = ? AND  Subject = ? AND Day = ?";
 
         int rows = template.update(sql, start_time, Subject, Day);
         System.out.println("number of rows affected are " + rows);
     }
 
-    public void insert(String Subject, String Day, int start_time, String Classroom) {
-        String sql = "insert into timetable (Subject, Day, start_time, Classroom) values (?, ?, ?, ?)";
-        int rows = template.update(sql, Subject, Day, start_time, Classroom);
+    public void insert(String Subject, String Day, int start_time, String Classroom, String Class) {
+        String sql = "insert into main (Subject, Day, start_time, Classroom, Class) values (?, ?, ?, ?, ?)";
+        int rows = template.update(sql, Subject, Day, start_time, Classroom, Class);
         // System.out.println("the insert operation in the database is complete and the rows affected are " + rows);
     }
 
 }
+//INSERT INTO main (serial_no, Class, Subject, Day, start_time, Classroom, Teacher)
+//VALUES (71, 'Comp_SY_Div1', 'TOC', 'Friday', 14, 'AC-203', 'JibiAbraham');
+

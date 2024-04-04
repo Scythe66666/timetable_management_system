@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 public class time_slot {
     public final String id;
+    private String CLASS;
     public List<String> list_lectures = new ArrayList<>();
     public List<String> list_classrooms = new ArrayList<>();
     int i = 0;

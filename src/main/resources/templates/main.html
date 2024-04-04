@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/assets/css/main.css}">
     <link rel="stylesheet" th:href="@{/assets/css/now-ui-kit.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/loginpage.css}">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
@@ -15,11 +16,15 @@
 </head>
 
 <body>
+
     <div th:replace="~{header::nav}"></div>
-    <div class="container" th:fragment="Timetable">
+    <h1> Welcome <span th:text="${username}"></span></h1>
+    <div class="container" style="align-content: center; align-items: center; margin: 0 ; width: min-content; overflow-x: auto;
+    max-width: 100%;">
         <div class="row">
-            <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content;">
-                <table class="rwd-table">
+            <div class="col"></div>
+            <div class="col-md-10">
+                <table class="rwd-table container">
                     <tr style="color: yellow;">
                         <th></th>
                         <th>9:00</th>
@@ -39,62 +44,36 @@
                                 <!-- <span th:if="${var != 'none' && var!= null}"> -->
                                 <span class="non-Empty" th:if="${var != 'NONE'}">
                                     <span th:if="${option != '2'}">
-                                        <span th:text="${var != 'NONE'? var: ''}"></span>
+                                        <span th:text="${var != 'NONE'? var: ''} +'('+${slot.CLASS}+')'"></span>
                                     </span>
                                     <span th:if="${option == '2'}" style="margin: 0; padding: 0;">
-                                        <form th:action="@{'/cancelLecture?lecName=' + ${var}+'&file=timetable'}"
+                                        <form th:action="@{'/cancelLecture?lecName=' + ${var}+'&file=main'}"
                                             style="margin: 0; padding: 0;" method="post">
                                             <input type="text" th:value="${slot.id}" style="display: none;" name="id">
                                             <input type="text" th:value="${Class}" style="display: none;" name="Class">
 
-                                            <button type="submit">
-                                                <span th:text="${var != 'none' and var != 'NONE' ? var : ''}"></span>
-                                            </button>
+                                            <button type="submit"><span
+                                                    th:text="${var}  +'('+${slot.CLASS}+')'"></span></button>
                                         </form>
                                     </span>
                                 </span>
                                 <br>
-                                <span th:if="${option == '1'}" style="display: block;">
-                                    <span th:if="${var == 'none' || var == null || var == 'NONE'}"
-                                        style="display: block;">
-                                        <form th:action="@{'/add_lecture'}" method="post">
-                                            <input type="text" th:value="${slot.id}" style="display: none;" name="id">
-                                            <input type="text" th:value="${Class}" style="display: none;" name="Class">
-                                            <input type="text" th:value="${Subject}" style="display: none;" name="Subject">
-                                            <button type="submit">.
-                                                <br>.
-                                                <br>.
-                                                <br>.
-                                                <br>.
-                                                <br>............</button>
-                                        </form>
-                                    </span>
-                                </span>
                             </span>
                         </td>
                         <!-- <td> <a role="button" class="update" th:href="@{/form2(name = ${grade.name})}">Update</a> </td> -->
                     </tr>
                 </table>
             </div>
+            <div class="col"></div>
         </div>
     </div>
-    <div style="display: flex; justify-content: center; font-size: 1.5rem;">
+    <div style="display: flex; justify-content: center;">
         <div class="flex-containerr">
             <div class="box">
-                <form th:action="@{'/timetable?option=1'}" style="color: red;">
-                    <button type="submit" style="font-size: 1.7rem;"> Arrange a lecture</button>
-                    <label>Subject:</label>
-                    <select id="gender" name="Subject">
-                        <option th:each="var:${list_subjects}">
-                            <span th:text="${var}"></span>
-                        </option>
-                    </select>
-                    <input type="number" value=1 name="option" style="display: none;">
-                    <input type="text" th:value="${Class}" style="display: none;" name="Class">
-                </form>
+                <a th:href="@{'/AddLecture'}">Arrange a lecture</a>
             </div>
             <div class="box">
-                <a th:href="@{'/timetable?option=2&Class='+${Class}}">cancel a lecture</a>
+                <a th:href="@{'/main?option=2'}">cancel a lecture</a>
             </div>
         </div>
     </div>
@@ -102,7 +81,8 @@
         <script th:src="@{/assets/js/add_lecture.js}"></script>
     </span>
     <script th:src="@{/assets/js/days.js}"></script>
-    <!-- <script th:src="@{/assets/js/add_lecture.js}"></script> -->
+
+
 </body>
 
 </html>

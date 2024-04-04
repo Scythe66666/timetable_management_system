@@ -206,3 +206,14 @@ color: rgba(255, 255, 255, 0.46) !important
     text-align: center !important;
     color: #a2a8bd !important
 }
+
+.colum1{
+    margin: 30px;
+    padding: 50px;
+    text-align: center;
+    border: 2px solid #AD91FF;
+}
+
+div.badge1{
+    padding: 20px;
+}

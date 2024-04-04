@@ -31,16 +31,16 @@
     </div>
 
     <!-- FORMULAIRE -->
-    <form class="form">
-      <input type="email" placeholder="Email Adress" class="email">
-      <input type="password" placeholder="password" class="pass">
+    <form class="form" th:action="@{/login}" method="post">
+      <input type="text" placeholder="Username" class="email" name="username">
+      <input type="password" placeholder="password" class="pass" name="password">
+      <a href="#" class="fp">Forgot password?</a>
+      <button type="submit" class="login_btn" style="background-color: #1D1E28;">Login</button>
     </form>
 
     <!-- MOT DE PASSE OUBLIE ? -->
-    <a href="#" class="fp">Forgot password?</a>
 
     <!-- BOUTTON LOGIN -->
-    <button type="button" class="login_btn" style="background-color: #1D1E28;">Login</button>
 
     <!-- PIED DE LA CARD -->
     <div class="footer_card_login">
