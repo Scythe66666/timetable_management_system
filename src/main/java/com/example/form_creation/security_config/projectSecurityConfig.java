@@ -46,6 +46,7 @@ public class projectSecurityConfig {
         .requestMatchers(mvcMatcherBuilder.pattern("/AddLecture")).hasRole("ADMIN")
         .requestMatchers(mvcMatcherBuilder.pattern("/main")).hasRole("ADMIN")
         .requestMatchers(mvcMatcherBuilder.pattern("/saveMsg")).permitAll()
+        .requestMatchers(mvcMatcherBuilder.pattern("/student_timetable")).permitAll()
 
         // .requestMatchers("/timetable/**").hasRole("ADMIN")
         .requestMatchers(PathRequest.toH2Console()).permitAll()

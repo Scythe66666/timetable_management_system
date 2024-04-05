@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+    <html xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns:th="https://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/now-ui-kit.css}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css">
+    <link th:href="@{/assets/css/timetable-stylesheet.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/sidebar.css}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bxl-codepen icon'></i>
+            <div class="logo_name">SideMenu</div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <i class=' bx bxs-graduation'></i>
+
+                <!-- <i class='bx bx-search'></i> -->
+                <!-- <i class="fa-solid fa-chalkboard-user" style="color: #ffffff;"></i> -->
+                <!-- <span class="tooltip">Search         </span> -->
+                <!-- <input type="" placeholder="Search..."> -->
+                <select id="Class">
+                    <option>Select Dep. & div"</option>
+                    <option th:each="var:${list_classes}" th:value="@{'/student_timetable?Class='+${var}}"><span
+                            th:text="${var}"></span></option>
+                </select>
+
+                <span class="tooltip">Search</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Home</span>
+                </a>
+                <span class="tooltip">Home</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-user'></i>
+                    <span class="links_name">UserLogin</span>
+                </a>
+                <span class="tooltip">UserLogin</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-chat'></i>
+                    <span class="links_name">Messages</span>
+                </a>
+                <span class="tooltip">Messages</span>
+            </li>
+            <!-- <li>
+                <a href="#">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">Analytics</span>
+                </a>
+                <span class="tooltip">Analytics</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-folder'></i>
+                    <span class="links_name">File Manager</span>
+                </a>
+                <span class="tooltip">Files</span>
+            </li> -->
+            <!-- <li>
+                <a href="#">
+                    <i class='bx bx-cart-alt'></i>
+                    <span class="links_name">Order</span>
+                </a>
+                <span class="tooltip">Order</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-heart'></i>
+                    <span class="links_name">Saved</span>
+                </a>
+                <span class="tooltip">Saved</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="links_name">Setting</span>
+                </a>
+                <span class="tooltip">Setting</span> -->
+            </li>
+            <li class="profile">
+                <div class="profile-details">
+                    <i class='bx bx-export'></i>
+                    <div class="name_job">
+                        <div class="name">Logout</div>
+                    </div>
+                </div>
+                <i class='bx bx-log-out' id="log_out"></i>
+            </li>
+        </ul>
+    </div>
+    <div style="background-color: palevioletred; display: block; height: 2rem;">
+        <span class="container text-animation">
+            Notices: There are no notics for now
+        </span>
+    </div>
+    <div class="container_cool_text">
+        <div class="cool_text"></div>
+    </div>
+    <h1 th:text="${Class}" class=" Heading glitch" data-text="GLITCH" style="margin-bottom: 0px;"></h1>
+    <!-- <div sec:authorize="hasRole('ADMIN')">
+        <h1 class=" Heading glitch" style="margin-bottom: 0px;">Ritesh Davkare</h1>
+    </div> -->
+    <div class="container" th:fragment="Timetable">
+        <div class="row">
+            <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content;">
+                <table class="rwd-table">
+                    <tr style="color: yellow;">
+                        <th></th>
+                        <th>9:00</th>
+                        <th>10:00</th>
+                        <th>11:00</th>
+                        <th>12:00</th>
+                        <th>01:00</th>
+                        <th>02:00</th>
+                        <th>03:00</th>
+                        <th>04:00</th>
+                        <th>05:00</th>
+                    </tr>
+                    <tr th:each="day: ${time_table}">
+                        <td class="days" style="color: yellow; font-weight: bold;"></td>
+                        <td th:each="slot:${day}">
+                            <span th:each="var:${slot.list_lectures}">
+                                <span class="non-Empty" th:if="${var != 'NONE'}">
+                                    <span th:text="${var != 'NONE'? var: ''}"></span>
+                                </span>
+                                <br>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/assets/js/days.js}"></script>
+    <script th:src="@{/assets/js/sidebar.js}"></script>
+    <script th:src="@{/assets/js/cool_text.js}"></script>
+
+    <!-- <script th:src="@{/assets/js/add_lecture.js}"></script> -->
+</body>
+
+</html>

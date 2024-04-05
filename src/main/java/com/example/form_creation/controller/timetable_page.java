@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.form_creation.time_slot;
 import com.example.form_creation.timetable_service_layer;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 @Controller
 public class timetable_page {
@@ -59,13 +60,32 @@ public class timetable_page {
     // You can access other user details such as authorities, etc.
     return "main";
   }
+  
+  @GetMapping("/student_timetable")
+  public String Student_timetable(@RequestParam String Class, Model model) {
+    model.addAttribute("Class", Class);
+    List<String> l_classes = tr.getListOfColumns("Class");
+    l_classes.remove("NONE");
+    l_classes.remove("");
+    model.addAttribute("list_classes", l_classes);
+    // String query = "select * from main where Class = 'Comp_SY_Div1'";
+    String query = "select * from main where Class = '" + Class + "'";
+    time_slot[][] days_student = tr.create_time_table(query);
+    for (time_slot[] day : days_student) {
+      for (time_slot tm : day) {
+        System.out.println(tm.list_lectures);
+      }
+    }
+    model.addAttribute("time_table", days_student);
+      return "student_timetable";
+  }
 
   @GetMapping("/timetable")
   public String getMethodName(@RequestParam(required = false) String option, @RequestParam String Class,
       @RequestParam(required = false) String Subject,
       Model model) {
-    if(Subject != null)
-        model.addAttribute("Subject", Subject);
+    if (Subject != null)
+      model.addAttribute("Subject", Subject);
     model.addAttribute("Class", Class);
     List<String> l_subjects = tr.getListOfColumns("Subject");
     l_subjects.remove("NONE");
@@ -78,11 +98,6 @@ public class timetable_page {
         System.out.println(tm.list_lectures);
       }
     }
-    // List<String> l = tr.getListOfColumns("Subject");
-    // for (String string : l) {
-    // System.out.println(string);
-    // }
-    // model.addAttribute("list_lec", l);
     model.addAttribute("option", option);
     model.addAttribute("time_table", days);
     return "timetable";
@@ -182,4 +197,6 @@ public class timetable_page {
     }
     return str;
   }
+
+  
 }

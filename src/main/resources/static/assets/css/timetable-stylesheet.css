@@ -2,12 +2,12 @@
 
 .rwd-table {
   margin: 1em 0;
-  min-width: 300px;
+  /* min-width: 300px; */
 }
 
 .rwd-table tr {
-  border-top: 1px solid #AD91FF;
-  border-bottom: 1px solid  #AD91FF;
+  border-top: 0.1rem solid #AD91FF;
+  border-bottom: 0.06rem solid  #AD91FF;
 }
 
 .rwd-table th {
@@ -124,4 +124,10 @@ button{
 .non-Empty > button{
   margin: 0; 
   padding: 0;
+}
+
+.Heading{
+  color: bisque;
+  text-align: center;
+  padding: 1rem;
 }
