@@ -12,14 +12,105 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
     <link th:href="@{/assets/css/timetable-stylesheet.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/sidebar.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css">
 </head>
 
 <body>
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bxl-codepen icon'></i>
+            <div class="logo_name">SideMenu</div>
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <i class=' bx bxs-graduation'></i>
 
-    <div th:replace="~{header::nav}"></div>
-    <h1> Welcome <span th:text="${username}"></span></h1>
-    <div style="align-content: center; align-items: center; margin: 0 ; width: min-content; max-width: 100%;">
-        <table class="rwd-table container">
+                <!-- <i class='bx bx-search'></i> -->
+                <!-- <i class="fa-solid fa-chalkboard-user" style="color: #ffffff;"></i> -->
+                <!-- <span class="tooltip">Search         </span> -->
+                <!-- <input type="" placeholder="Search..."> -->
+                <select id="Class">
+                    <option>Select Dep. & div"</option>
+                    <option th:each="var:${list_classes}" th:value="@{'/student_timetable?Class='+${var}}"><span
+                            th:text="${var}"></span></option>
+                </select>
+
+                <span class="tooltip">Search</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Home</span>
+                </a>
+                <span class="tooltip">Home</span>
+            </li>
+            <li>
+                <a th:href="@{'/login'}">
+                    <i class='bx bx-user'></i>
+                    <span class="links_name">UserLogin</span>
+                </a>
+                <span class="tooltip">UserLogin</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-chat'></i>
+                    <span class="links_name">Messages</span>
+                </a>
+                <span class="tooltip">Messages</span>
+            </li>
+            <!-- <li>
+                <a href="#">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">Analytics</span>
+                </a>
+                <span class="tooltip">Analytics</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-folder'></i>
+                    <span class="links_name">File Manager</span>
+                </a>
+                <span class="tooltip">Files</span>
+            </li> -->
+            <!-- <li>
+                <a href="#">
+                    <i class='bx bx-cart-alt'></i>
+                    <span class="links_name">Order</span>
+                </a>
+                <span class="tooltip">Order</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-heart'></i>
+                    <span class="links_name">Saved</span>
+                </a>
+                <span class="tooltip">Saved</span>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="links_name">Setting</span>
+                </a>
+                <span class="tooltip">Setting</span> -->
+            </li>
+            <li class="profile">
+                <div class="profile-details">
+                    <i class='bx bx-export'></i>
+                    <div class="name_job">
+                        <div class="name">Logout</div>
+                    </div>
+                </div>
+                <i class='bx bx-log-out' id="log_out"></i>
+            </li>
+        </ul>
+    </div>
+
+    <!-- <div th:replace="~{header::nav}"></div> -->
+    <h1 style="color: bisque; margin-left: 10%;">Welcome, <span sec:authentication="name"></span>!</h1>
+    <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content; overflow: auto;">
+        <table class="rwd-table ">
             <tr style="color: yellow;">
                 <th></th>
                 <th>9:00</th>
@@ -38,15 +129,17 @@
                     <span th:each="var:${slot.list_lectures}">
                         <span class="non-Empty" th:if="${var != 'NONE'}">
                             <span th:if="${option != '2'}">
-                                <span th:text="${var != 'NONE'? var: ''} +'('+${slot.CLASS}+')'"></span>
+                                <span th:text="${var != 'NONE'? var: ''} "></span>
+                                <br>
+                                <span th:text="'('+${slot.CLASS}+')'"></span>
                             </span>
                             <span th:if="${option == '2'}" style="margin: 0; padding: 0;">
                                 <form th:action="@{'/cancelLecture?lecName=' + ${var}+'&file=main'}"
                                     style="margin: 0; padding: 0;" method="post">
                                     <input type="text" th:value="${slot.id}" style="display: none;" name="id">
-                                    <input type="text" th:value="${Class}" style="display: none;" name="Class">
+                                    <input type="text" th:value="${slot.CLASS}" style="display: none;" name="Class">
                                     <button type="submit"><span
-                                            th:text="${var}  +'('+${slot.CLASS}+')'"></span></button>
+                                            th:text="${var}"></span></button>
                                 </form>
                             </span>
                         </span>
@@ -70,6 +163,7 @@
         <script th:src="@{/assets/js/add_lecture.js}"></script>
     </span>
     <script th:src="@{/assets/js/days.js}"></script>
+    <script th:src="@{/assets/js/sidebar.js}"></script>
 
 
 </body>

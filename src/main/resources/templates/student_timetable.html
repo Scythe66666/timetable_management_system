@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-    <html xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns:th="https://www.thymeleaf.org" >
+<html xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,7 +47,7 @@
                 <span class="tooltip">Home</span>
             </li>
             <li>
-                <a href="#">
+                <a th:href="@{'/login'}">
                     <i class='bx bx-user'></i>
                     <span class="links_name">UserLogin</span>
                 </a>
@@ -105,13 +106,17 @@
             </li>
         </ul>
     </div>
-    <div style="background-color: palevioletred; display: block; height: 2rem;">
-        <span class="container text-animation">
-            Notices: There are no notics for now
+    <div style="background-color: palevioletred; display: block; height: 2rem; width: 200%;">
+        <span class="container text-animation ">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum veniam saepe adipisci eos! Omnis voluptate veritatis suscipit sunt corrupti perspiciatis reprehenderit autem. Possimus corporis quibusdam unde, cupiditate magni tempore illum!
         </span>
+        <span></span>
     </div>
     <div class="container_cool_text">
         <div class="cool_text"></div>
+        <div style="color: palevioletred;"><span
+                th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+        </div>
     </div>
     <h1 th:text="${Class}" class=" Heading glitch" data-text="GLITCH" style="margin-bottom: 0px;"></h1>
     <!-- <div sec:authorize="hasRole('ADMIN')">

@@ -291,10 +291,10 @@ select option:hover {
 
 @keyframes slideText {
   0% {
-    left: 100%; /* Start position, move from right */
+    left: 60%; /* Start position, move from right */
   }
   100% {
-    left: -80%; /* End position, move to left */
+    left: -60%; /* End position, move to left */
   }
 }
 
@@ -310,9 +310,12 @@ select option:hover {
 }
 
 .cool_text {
+  margin-left: 8%;
   font-weight: 100;
   font-size: 28px;
   color: #FAFAFA;
+  flex-grow: 1;
+  text-align: center;
 }
 
 .dud {
