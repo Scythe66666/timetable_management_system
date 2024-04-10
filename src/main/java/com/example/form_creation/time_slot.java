@@ -6,39 +6,49 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-
-@Getter 
+@ToString
+@Getter
 @Setter
 public class time_slot {
     public final String id;
     private String CLASS;
-    public List<String> list_lectures = new ArrayList<>();
-    public List<String> list_classrooms = new ArrayList<>();
-    int i = 0;
+    private List<String> list_lectures;
+    private List<String> list_classrooms;
+    private List<String> canceled_lectures;
+    private List<String> extra_lectures;
+    private List<String> extra_classrooms;
+
     public void append_lecture(String subject, String classroom) {
-        i++;
         list_lectures.add(subject);
         list_classrooms.add(classroom);
     }
-    public boolean delete_lecture(String subject)
-    {
-        return list_lectures.remove(subject); 
+    
+    public void append_extra_lecture(String subject, String classroom) {
+        extra_lectures.add(subject);
+        extra_classrooms.add(classroom);
+        list_lectures.remove(subject);
+        list_classrooms.remove(classroom);
     }
 
-    public int geti(){
-        return i;
+    public void append_canceled_lecture(String subject, String classroom) {
+        canceled_lectures.add(subject);
+        list_lectures.remove(subject);
+        list_classrooms.remove(classroom);
     }
+
+    public boolean delete_lecture(String subject) {
+        return list_lectures.remove(subject);
+    }
+
     public time_slot() {
         id = UUID.randomUUID().toString();
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-            " list_lectures='" + getList_lectures() + "'" +
-            ", list_classrooms='" + getList_classrooms() + "'" +
-            "}";
+        list_lectures = new ArrayList<>();
+        list_classrooms = new ArrayList<>();
+        canceled_lectures = new ArrayList<>();
+        extra_lectures = new ArrayList<>();
+        extra_classrooms = new ArrayList<>();
     }
 
 }

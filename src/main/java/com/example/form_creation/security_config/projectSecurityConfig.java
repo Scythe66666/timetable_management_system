@@ -32,7 +32,7 @@ public class projectSecurityConfig {
         // http.authorizeHttpRequests(requests -> requests.anyRequest().denyAll())
             // .formLogin(Customizer.withDefaults())
             // .httpBasic(Customizer.withDefaults());
-        http.csrf((csrf) -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()).ignoringRequestMatchers("/new")/* .disable()*/)
+        http.csrf((csrf) -> csrf.disable()/*ignoringRequestMatchers(PathRequest.toH2Console()).ignoringRequestMatchers("/new")*//* .disable()*/)
         .authorizeHttpRequests((requests) -> requests.requestMatchers("/home", "/login_page","/", "/error").permitAll()
         .requestMatchers("/signup").permitAll()
         .requestMatchers(mvcMatcherBuilder.pattern("/**.html")).permitAll()

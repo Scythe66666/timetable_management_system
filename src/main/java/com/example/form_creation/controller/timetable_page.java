@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.form_creation.time_slot;
 import com.example.form_creation.timetable_service_layer;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 @Controller
 public class timetable_page {
@@ -28,7 +27,7 @@ public class timetable_page {
   public String AddLecture(Model model) {
     List<String> l_classes = tr.getListOfColumns("Class");
     List<String> l_subjects = tr.getListOfColumns("Subject");
-    System.out.println();
+    // System.out.println();
     l_classes.remove("NONE");
     model.addAttribute("list_classes", l_classes);
     model.addAttribute("list_subjects", l_subjects);
@@ -42,25 +41,15 @@ public class timetable_page {
     // Extract user details from Authentication object
     userDetails = (UserDetails) authentication.getPrincipal();
     String username = userDetails.getUsername();
-    model.addAttribute("username", username);
-    String query2 = "SELECT * FROM main WHERE Teacher = '" + username + "'";
-    days2 = tr.create_time_table(query2);
+    days2 = tr.create_time_table_for_teacher(username);
     List<String> l_subjects = tr.getListOfColumns("Subject");
     l_subjects.remove("NONE");
     model.addAttribute("list_subjects", l_subjects);
-
-    for (time_slot[] day : days2) {
-      for (time_slot tm : day) {
-        System.out.println(tm.list_lectures);
-      }
-    }
     model.addAttribute("time_table", days2);
     model.addAttribute("option", option);
-    // System.out.println("your query is " + query2);
-    // You can access other user details such as authorities, etc.
     return "main";
   }
-  
+
   @GetMapping("/student_timetable")
   public String Student_timetable(@RequestParam String Class, Model model) {
     model.addAttribute("Class", Class);
@@ -68,16 +57,9 @@ public class timetable_page {
     l_classes.remove("NONE");
     l_classes.remove("");
     model.addAttribute("list_classes", l_classes);
-    // String query = "select * from main where Class = 'Comp_SY_Div1'";
-    String query = "select * from main where Class = '" + Class + "'";
-    time_slot[][] days_student = tr.create_time_table(query);
-    for (time_slot[] day : days_student) {
-      for (time_slot tm : day) {
-        System.out.println(tm.list_lectures);
-      }
-    }
+    time_slot[][] days_student = tr.create_time_table(Class);
     model.addAttribute("time_table", days_student);
-      return "student_timetable";
+    return "student_timetable";
   }
 
   @GetMapping("/timetable")
@@ -90,14 +72,7 @@ public class timetable_page {
     List<String> l_subjects = tr.getListOfColumns("Subject");
     l_subjects.remove("NONE");
     model.addAttribute("list_subjects", l_subjects);
-    // String query = "select * from main where Class = 'Comp_SY_Div1'";
-    String query = "select * from main where Class = '" + Class + "'";
-    days = tr.create_time_table(query);
-    for (time_slot[] day : days) {
-      for (time_slot tm : day) {
-        System.out.println(tm.list_lectures);
-      }
-    }
+    days = tr.create_time_table(Class);
     model.addAttribute("option", option);
     model.addAttribute("time_table", days);
     return "timetable";
@@ -108,11 +83,11 @@ public class timetable_page {
     int i = 0, j = 0;
     id.trim();
     int flag = 0;
+    time_slot tm = null;
     for (i = 0; i < days.length; i++) {
       for (j = 0; j < days[i].length; j++) {
-        System.out.println(
-            "value of days id is " + days[i][j].getId() + " value of id " + id);
         if (id.equalsIgnoreCase(days[i][j].getId())) {
+          tm = days[i][j];
           flag = 1;
           break;
         }
@@ -120,27 +95,16 @@ public class timetable_page {
       if (flag == 1)
         break;
     }
-    String[] arr = {
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-    };
-    String day = arr[i];
+
+    String day = tr.giveDay(i);
     int start_time = j + 9;
-    System.out.println(
-        "the day is " + day + " the start time is " + start_time);
-    tr.add_lecture(Subject, day, start_time, "AC203", "Comp_SY_Div1");
+    tr.add_lecture(Subject, day, start_time, "Comp_SY_Div1", "AC203");
     return "redirect:/timetable?Class=" + Class;
   }
 
   @PostMapping("/cancelLecture")
   public String postMethodName(@RequestParam String lecName, @RequestParam String id, @RequestParam String file,
       @RequestParam String Class) {
-    time_slot tm;
     String Main = "main";
     time_slot[][] days3 = days;
     if (file.equals(Main))
@@ -150,10 +114,11 @@ public class timetable_page {
     for (time_slot[] day : days3) {
       int time_count = 9;
       for (time_slot slot : day) {
-        System.out.println(slot.list_lectures);
+        // System.out.println(slot.list_lectures);
         if (id.equalsIgnoreCase(slot.getId())) {
           id.trim();
-          tr.cancel_lecture(lecName, this.giveDay(day_count), time_count, Class);
+          int index = slot.getList_lectures().indexOf(lecName);
+          tr.cancel_lecture(lecName, tr.giveDay(day_count), time_count, Class, slot.getList_classrooms().get(index));
           flag = 1;
           break;
         }
@@ -163,40 +128,8 @@ public class timetable_page {
         break;
       day_count++;
     }
-
+    if (file.equals(Main))
+      return "redirect:/main";
     return "redirect:/timetable?Class=" + Class;
   }
-
-  public String giveDay(int num) {
-    String str = null;
-    switch (num) {
-      case 0:
-        str = "Monday";
-        break;
-      case 1:
-        str = "Tuesday";
-        break;
-      case 2:
-        str = "Wednesday";
-        break;
-      case 3:
-        str = "Thursday";
-        break;
-      case 4:
-        str = "Friday";
-        break;
-      case 5:
-        str = "Saturday";
-        break;
-      case 6:
-        str = "Sunday";
-        break;
-      default:
-        str = "Invalid day number";
-        break;
-    }
-    return str;
-  }
-
-  
 }

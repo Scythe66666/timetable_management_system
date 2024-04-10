@@ -35,6 +35,13 @@
                 <tr th:each="day: ${time_table}">
                     <td class="days" style="color: yellow; font-weight: bold;"></td>
                     <td th:each="slot:${day}">
+                        <span th:each="var, index: ${slot.extra_lectures}">
+                            <span class="non-Empty" th:if="${var != 'NONE'}" style=" color: greenyellow;">
+                                <span th:if="${option != '2'}">
+                                    <span th:text="${var != 'NONE'? var: ''}"></span>
+                                </span>
+                            </span>
+                        </span>
                         <span th:each="var, index : ${slot.list_lectures}"
                             th:with="classs = ${slot.list_classrooms[__${index.index}__]}">
                             <!-- <span th:if="${var != 'none' && var!= null}"> -->
@@ -57,7 +64,7 @@
                                 </span>
                             </span>
                             <br>
-                            <span th:if="${option == '1'}" style="display: block;">
+                            <span th:if="${option == '1' and #lists.isEmpty(slot.extra_lectures)}" style="display: block;">
                                 <span th:if="${var == 'none' || var == null || var == 'NONE'}" style="display: block;">
                                     <form th:action="@{'/add_lecture'}" method="post">
                                         <input type="text" th:value="${slot.id}" style="display: none;" name="id">
