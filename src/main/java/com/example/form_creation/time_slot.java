@@ -28,8 +28,6 @@ public class time_slot {
     public void append_extra_lecture(String subject, String classroom) {
         extra_lectures.add(subject);
         extra_classrooms.add(classroom);
-        list_lectures.remove(subject);
-        list_classrooms.remove(classroom);
     }
 
     public void append_canceled_lecture(String subject, String classroom) {

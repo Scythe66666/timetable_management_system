@@ -41,6 +41,13 @@ public class timetable_repo {
             return l;
         }
     };
+    RowMapper<String> r4 = new RowMapper<String>() {
+        @Override
+        public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+            String l = rs.getString("Classroom");
+            return l;
+        }
+    };
     // String sql = "select * from timetable";
 
     public List<lecture> getAll(String sql) {
@@ -59,10 +66,17 @@ public class timetable_repo {
         List <String> l = template.query(sql, r3);
         return l;
     }
+    
+    public List<String> getClassrooms(){
+        String sql = "SELECT DISTINCT Classroom from main";
 
-    public List<String> getSubjects(){
-        String sql = "SELECT DISTINCT Subject from main";
+        List <String> l = template.query(sql, r4);
+        return l;
+    }
 
+    public List<String> getSubjects(String Class, String Teacher){
+        String sql = "SELECT DISTINCT Subject from main where Class='"+Class+"' AND Teacher='"+Teacher+"'";
+        System.out.println("sql query is" + sql);
         List <String> l = template.query(sql, r2);
         return l;
     }
@@ -80,11 +94,12 @@ public class timetable_repo {
         System.out.println(rows + " are affected");
         // System.out.println("the insert operation in the database is complete and the rows affected are " + rows);
     }
-    public void insert2(String Subject, String Day, int StartTime, String Class, Date CancelDate, String type, String Classroom) {
-        String sql = "INSERT INTO changesInTimetable (CancelDate, start_time, Day, Subject, Class, changeType, Classroom) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        int rows = template.update(sql, CancelDate, StartTime , Day, Subject, Class, type, Classroom);
-        System.out.println(rows + " are affected");
+
+    public void insert2(String Subject, String Day, int StartTime, String Class, Date CancelDate, String type, String Classroom, String Teacher) {
+        String sql = "INSERT INTO changesInTimetable (CancelDate, start_time, Day, Subject, Class, changeType, Classroom, Teacher) " +
+                     "VALUES (?, ?, ?, ?,    ?, ?, ?, ?)";
+        int rows = template.update(sql, CancelDate, StartTime , Day, Subject, Class, type, Classroom, Teacher);
+        System.out.println(rows + " are affected value of classroom is " + Classroom);
         // System.out.println("the insert operation in the database is complete and the rows affected are " + rows);
     }
 

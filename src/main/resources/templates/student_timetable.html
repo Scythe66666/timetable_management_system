@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <div class="sidebar">
+    <div class="sidebar" th:fragment="sidebar">
         <div class="logo-details">
             <i class='bx bxl-codepen icon'></i>
             <div class="logo_name">SideMenu</div>
@@ -26,40 +26,51 @@
         <ul class="nav-list">
             <li>
                 <i class=' bx bxs-graduation'></i>
-
-                <!-- <i class='bx bx-search'></i> -->
-                <!-- <i class="fa-solid fa-chalkboard-user" style="color: #ffffff;"></i> -->
-                <!-- <span class="tooltip">Search         </span> -->
-                <!-- <input type="" placeholder="Search..."> -->
                 <select id="Class">
                     <option>Select Dep. & div"</option>
-                    <option th:each="var:${list_classes}" th:value="@{'/student_timetable?Class='+${var}}"><span
-                            th:text="${var}"></span></option>
-                </select>
+                    <span th:if="${currentPath=='/student_timetable'}">
+                        <option th:each="var:${list_classes}" th:value="@{'/student_timetable?Class='+${var}}">
+                            <span th:text="${var}"></span>
+                        </option>
+                    </span>
+                    <span th:else>
+                    <!-- <span th:if="${currentPath=='/timetable' || currentPath =='/main'}"> -->
+                        <option th:each="var:${list_classes}" th:value="@{'/timetable?Class='+${var}}">
+                            <span th:text="${var}"></span>
+                        </option>
+                    </span>
 
-                <span class="tooltip">Search</span>
+                </select>
+                <span class="tooltip">Choose Department and division</span>
             </li>
             <li>
-                <a href="#">
+                <a th:href="@{'/'}">
                     <i class='bx bx-grid-alt'></i>
                     <span class="links_name">Home</span>
                 </a>
                 <span class="tooltip">Home</span>
             </li>
-            <li>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{'/main'}">
+                    <i class='bx bx-user'></i>
+                    <span class="links_name">main</span>
+                </a>
+                <span class="tooltip">main</span>
+            </li>
+            <li th:if="${!#authorization.expression('isAuthenticated()')}">
                 <a th:href="@{'/login'}">
                     <i class='bx bx-user'></i>
                     <span class="links_name">UserLogin</span>
                 </a>
                 <span class="tooltip">UserLogin</span>
             </li>
-            <li>
+            <!-- <li th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="#">
                     <i class='bx bx-chat'></i>
                     <span class="links_name">Messages</span>
                 </a>
                 <span class="tooltip">Messages</span>
-            </li>
+            </li> -->
             <!-- <li>
                 <a href="#">
                     <i class='bx bx-pie-chart-alt-2'></i>
@@ -94,35 +105,65 @@
                     <span class="links_name">Setting</span>
                 </a>
                 <span class="tooltip">Setting</span> -->
+
+            <!-- </li> -->
+            <li sec:authorize="hasRole('ROLE_ADMIN')" th:if="${currentPath =='/main' || currentPath == '/timetable'}">
+                <a th:if="${currentPath == '/main'}" th:href="@{'/main?option=2'}">
+                    <i class="bx bx-calendar-x"></i>
+                    <span class="links_name">Cancel Lecture</span>
+                    <!-- <i class='bx bx-cog'></i> -->
+                </a>
+                <a th:if="${currentPath == '/timetable' || currentPath == '/student_timetable'}"
+                    th:href="@{'/timetable?option=2&Class='+${Class}}">
+                    <i class="bx bx-calendar-x"></i>
+                    <span class="links_name">Cancel Lecture</span>
+                </a>
+                <span class="tooltip">Cancel Lecture</span>
             </li>
-            <li class="profile">
-                <div class="profile-details">
-                    <i class='bx bx-export'></i>
-                    <div class="name_job">
-                        <div class="name">Logout</div>
+            <span th:if="${currentPath=='/timetable'}">
+                <li sec:authorize="hasRole('ROLE_ADMIN')" onclick="openPopup()">
+                    <a>
+                        <i class="bx bx-calendar-check"></i>
+                        <span class="links_name">Extra Lecture</span>
+                        <!-- <i class='bx bx-cog'></i> -->
+                    </a>
+                    <span class="tooltip">Extra Lecture</span>
+                </li>
+            </span>
+            <span th:if="${currentPath=='/main'}">
+                <li sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{'/AddLecture'}">
+                        <i class="bx bx-calendar-check"></i>
+                        <span class="links_name">Extra Lecture</span>
+                        <!-- <i class='bx bx-cog'></i> -->
+                    </a>
+                    <span class="tooltip">Extra Lecture</span>
+                </li>
+            </span>
+            <li class="profile" th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{'/logout'}">
+                    <div class="profile-details">
+                        <i class='bx bx-export'></i>
+                        <div class="name_job">
+                            <div class="name">Logout</div>
+                        </div>
                     </div>
-                </div>
-                <i class='bx bx-log-out' id="log_out"></i>
+                    <i class='bx bx-log-out' id="log_out"></i>
+                </a>
             </li>
         </ul>
     </div>
     <div style="background-color: palevioletred; display: block; height: 2rem; width: 200%;">
-        <span class="container text-animation ">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum veniam saepe adipisci eos! Omnis voluptate veritatis suscipit sunt corrupti perspiciatis reprehenderit autem. Possimus corporis quibusdam unde, cupiditate magni tempore illum!
-        </span>
-        <span></span>
+        <span class="container text-animation " th:text=${notification}></span>
     </div>
     <div class="container_cool_text">
-        <div class="cool_text"></div>
         <div style="color: palevioletred;"><span
                 th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
         </div>
     </div>
     <h1 th:text="${Class}" class=" Heading glitch" data-text="GLITCH" style="margin-bottom: 0px;"></h1>
-    <!-- <div sec:authorize="hasRole('ADMIN')">
-        <h1 class=" Heading glitch" style="margin-bottom: 0px;">Ritesh Davkare</h1>
-    </div> -->
-    <div class="container" th:fragment="Timetable">
+    <div th:replace="~{timetable::Timetable}"></div>
+    <!-- <div class="container" th:fragment="Timetable">
         <div class="row">
             <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content;">
                 <table class="rwd-table">
@@ -152,7 +193,7 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> -->
     <script th:src="@{/assets/js/days.js}"></script>
     <script th:src="@{/assets/js/sidebar.js}"></script>
     <script th:src="@{/assets/js/cool_text.js}"></script>

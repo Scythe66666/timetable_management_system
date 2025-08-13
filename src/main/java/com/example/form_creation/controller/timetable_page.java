@@ -25,12 +25,10 @@ public class timetable_page {
 
   @GetMapping("/AddLecture")
   public String AddLecture(Model model) {
-    List<String> l_classes = tr.getListOfColumns("Class");
-    List<String> l_subjects = tr.getListOfColumns("Subject");
+    List<String> l_classes = tr.getListOfSubjects("Class", "SY", userDetails.getUsername());
     // System.out.println();
     l_classes.remove("NONE");
     model.addAttribute("list_classes", l_classes);
-    model.addAttribute("list_subjects", l_subjects);
     return "AddLecture";
   }
 
@@ -38,13 +36,16 @@ public class timetable_page {
   public String mainMethod(Model model, @RequestParam(required = false) String option) {
     // Get the Authentication object
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    List<String> l_classes = tr.getListOfSubjects("Class", "SY", "none");
+    l_classes.remove("NONE");
+    l_classes.remove("");
+    model.addAttribute("list_classes", l_classes);
     // Extract user details from Authentication object
     userDetails = (UserDetails) authentication.getPrincipal();
     String username = userDetails.getUsername();
     days2 = tr.create_time_table_for_teacher(username);
-    List<String> l_subjects = tr.getListOfColumns("Subject");
-    l_subjects.remove("NONE");
-    model.addAttribute("list_subjects", l_subjects);
+    model.addAttribute("file_name", "main");
+    model.addAttribute("user", userDetails.getUsername());
     model.addAttribute("time_table", days2);
     model.addAttribute("option", option);
     return "main";
@@ -53,62 +54,85 @@ public class timetable_page {
   @GetMapping("/student_timetable")
   public String Student_timetable(@RequestParam String Class, Model model) {
     model.addAttribute("Class", Class);
-    List<String> l_classes = tr.getListOfColumns("Class");
+    List<String> l_classes = tr.getListOfSubjects("Class", "SY", "none");
     l_classes.remove("NONE");
     l_classes.remove("");
     model.addAttribute("list_classes", l_classes);
     time_slot[][] days_student = tr.create_time_table(Class);
+    model.addAttribute("notification", tr.getNotification(Class));
+    // System.out.println("notification is " + tr.getNotification(Class));
     model.addAttribute("time_table", days_student);
+    model.addAttribute("file_name", "student_timetable");
     return "student_timetable";
   }
 
   @GetMapping("/timetable")
   public String getMethodName(@RequestParam(required = false) String option, @RequestParam String Class,
       @RequestParam(required = false) String Subject,
+      @RequestParam(required = false) String id,
       Model model) {
+    // System.out
+    // .println("value of id is " + id + " Subject is: " + Subject + "Class is " +
+    // Class + " options is " + option);
     if (Subject != null)
       model.addAttribute("Subject", Subject);
+    if (id != null) {
+      // System.out.println("id " + id + " is added to the model");
+      model.addAttribute("id", id);
+      int num = tr.findDayAndTimeById(id, days);
+      String Day = tr.giveDay(num / 10);
+      int start_time = num % 10;
+      model.addAttribute("start_time", start_time);
+      model.addAttribute("day", Day);
+      // System.out.println("value of day is " + Day + " value of start_time is " +
+      // start_time);
+    }
+    List<String> Subjects = tr.getListOfSubjects("Subject", Class, userDetails.getUsername());
+    // for (String string : Subjects) {
+      // System.out.println("list_subjects is " + string);
+    // }
+    List<String> Classrooms = tr.getListOfClassRooms();
+    // in getListofSubjects the second and third argument are worth less kinda like
+    // a bug should fix it
+    List<String> l_classes = tr.getListOfSubjects("Class", "SY", "none");
+    l_classes.remove("NONE");
+    l_classes.remove("");
+    model.addAttribute("list_classes", l_classes);
+    model.addAttribute("user", userDetails.getUsername());
+    model.addAttribute("list_classrooms", Classrooms);
+    model.addAttribute("list_subjects", Subjects);
     model.addAttribute("Class", Class);
-    List<String> l_subjects = tr.getListOfColumns("Subject");
-    l_subjects.remove("NONE");
-    model.addAttribute("list_subjects", l_subjects);
     days = tr.create_time_table(Class);
     model.addAttribute("option", option);
     model.addAttribute("time_table", days);
+    model.addAttribute("file_name", "timetable");
     return "timetable";
   }
 
   @PostMapping("/add_lecture")
-  public String postMethodName(@RequestParam String id, @RequestParam String Class, @RequestParam String Subject) {
-    int i = 0, j = 0;
-    id.trim();
-    int flag = 0;
-    time_slot tm = null;
-    for (i = 0; i < days.length; i++) {
-      for (j = 0; j < days[i].length; j++) {
-        if (id.equalsIgnoreCase(days[i][j].getId())) {
-          tm = days[i][j];
-          flag = 1;
-          break;
-        }
-      }
-      if (flag == 1)
-        break;
-    }
+  public String AddLecture(@RequestParam String day, @RequestParam int start_time, @RequestParam String Class,
+      @RequestParam String Subject,
+      @RequestParam String Classroom, @RequestParam String Teacher) {
+    // System.out.println("value of classroom is " + Classroom);
 
-    String day = tr.giveDay(i);
-    int start_time = j + 9;
-    tr.add_lecture(Subject, day, start_time, "Comp_SY_Div1", "AC203");
+    start_time += 9;
+    tr.add_lecture(Subject, day, start_time, Class, Classroom, Teacher);
     return "redirect:/timetable?Class=" + Class;
   }
 
   @PostMapping("/cancelLecture")
   public String postMethodName(@RequestParam String lecName, @RequestParam String id, @RequestParam String file,
+      @RequestParam String Teacher,
       @RequestParam String Class) {
+    System.out.println(" parameter you have received are  lecName + " + lecName + " id " + id + " file name " + file
+        + " teacher :" + Teacher + " Class is " + Class);
     String Main = "main";
     time_slot[][] days3 = days;
-    if (file.equals(Main))
+    if (file.equals(Main)) {
+
+      // System.out.println("you enter the if of the cancelLecture");
       days3 = days2;
+    }
     int day_count = 0;
     int flag = 0;
     for (time_slot[] day : days3) {
@@ -118,7 +142,12 @@ public class timetable_page {
         if (id.equalsIgnoreCase(slot.getId())) {
           id.trim();
           int index = slot.getList_lectures().indexOf(lecName);
-          tr.cancel_lecture(lecName, tr.giveDay(day_count), time_count, Class, slot.getList_classrooms().get(index));
+          if (!file.equals(Main))
+            tr.cancel_lecture(lecName, tr.giveDay(day_count), time_count, Class, slot.getList_classrooms().get(index),
+                Teacher);
+          else
+            tr.cancel_lecture(lecName, tr.giveDay(day_count), time_count, slot.getCLASS(),
+                slot.getList_classrooms().get(index), userDetails.getUsername());
           flag = 1;
           break;
         }
@@ -132,4 +161,11 @@ public class timetable_page {
       return "redirect:/main";
     return "redirect:/timetable?Class=" + Class;
   }
+
+  @PostMapping("/notifications")
+  public String getNotifications(@RequestParam String Class) {
+    String Message = null;
+    return Message;
+  }
+
 }

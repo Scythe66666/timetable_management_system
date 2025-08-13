@@ -53,7 +53,7 @@ public class projectSecurityConfig {
         )
         .formLogin(loginConfigurer -> loginConfigurer.loginPage("/login")
             .defaultSuccessUrl("/main", true).failureUrl("/home").permitAll())
-        .logout(logoutConfigurer -> logoutConfigurer.logoutSuccessUrl("/login1?logout=true")
+        .logout(logoutConfigurer -> logoutConfigurer.logoutSuccessUrl("/login?logout=true")
             .invalidateHttpSession(true).permitAll())
         .httpBasic(Customizer.withDefaults())
         ;

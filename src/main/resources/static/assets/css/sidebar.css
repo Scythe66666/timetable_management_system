@@ -242,12 +242,6 @@
     }
   }
   
-/* CSS styles for dropdown menu */
-.dropdown {
-}
-
-.dropdown-content {
-}
 
 .dropdown-content a {
   color: black;
@@ -286,15 +280,15 @@ select option:hover {
 
 .text-animation {
   position: relative;
-  animation: slideText 17s linear infinite;
+  animation: slideText 12s linear infinite;
 }
 
 @keyframes slideText {
   0% {
-    left: 60%; /* Start position, move from right */
+    left: 10%; /* Start position, move from right */
   }
   100% {
-    left: -60%; /* End position, move to left */
+    left: -10%; /* End position, move to left */
   }
 }
 

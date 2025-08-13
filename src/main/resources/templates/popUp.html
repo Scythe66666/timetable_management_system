@@ -1,0 +1,52 @@
+<div class="popup" id="popup" th:fragment="popUp">
+    <img th:src="@{'assets/images/404-tick.png'}">
+    <button onclick="closePopup()"
+        style="display: inline; border: 2px solid black;  position: absolute; top:  0px; right: 0px; height: 30px; width: 30px; font-size: 25px; font-weight: bold; text-align: center; line-height: 30px; padding: 0px; ">x</button>
+    <form th:action="@{'/timetable?option=1'}" >
+        <label style="display: inline-block;">
+            <h2>Choose Subject: </h2>
+        </label>
+        <select style="display: inline-block;" name="Subject">
+            <option selected>Select Class</option>
+            <option th:each="var:${list_subjects}">
+                <span th:text="${var}"></span>
+            </option>
+        </select>
+        <input type="number" value=1 name="option" style="display: none;">
+        <input type="text" th:value="${Class}" style="display: none;" name="Class">
+        <button class="popup_button" type="submit">Ok</button>
+    </form>
+</div>
+
+
+<div class="popup" id="popup2" th:fragment="popUp2">
+    <img th:src="@{'assets/images/404-tick.png'}">
+    <button onclick="closePopup()" style="display: inline; border: 2px solid black;  position: absolute; top:  0px; right: 0px; height: 30px; width: 30px; font-size: 25px; font-weight: bold; text-align: center; line-height: 30px; padding: 0px; ">x</button>
+    <form th:action="@{'/add_lecture'}" method="post">
+        <!-- <label style="display: inline-block;">
+            <h2>Choose Subject: </h2>
+        </label>
+        <select style="display: inline-block;" name="Subject">
+            <option >Select Class</option>
+            <option th:each="var:${list_subjects}" selected>
+                <span th:text="${var}"></span>
+            </option>
+        </select> -->
+        <label style="display: inline-block;">
+            <h2>Choose Classroom:</h2>
+        </label>
+        <select style="display: inline-block;" name="Classroom">
+            <option selected>Select here</option>
+            <option th:each="var:${list_classrooms}">
+                <span th:text="${var}"></span>
+            </option>
+        </select>
+        <input type="text" th:value="${day}" style="display: none;" name="day">
+        <input type="number" th:value="${start_time}" style="display: none;" name="start_time">
+        <input type="text" th:value="${Subject}" style="display: none;" name="Subject">
+        <input type="text" th:value="${Class}" style="display: none;" name="Class">
+        <input type="text" th:value="${user}" style="display: none;" name="Teacher">
+
+        <button class="popup_button" type="submit" onclick="closePopup()">Ok</button>
+    </form>
+</div>

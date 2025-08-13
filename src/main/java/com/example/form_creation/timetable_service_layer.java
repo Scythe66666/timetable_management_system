@@ -13,23 +13,24 @@ public class timetable_service_layer {
     @Autowired
     timetable_repo rp;
 
-    public void cancel_lecture(String subject, String Day, int start_time, String Class, String Classroom) {
+    public void cancel_lecture(String subject, String Day, int start_time, String Class, String Classroom, String Teacher) {
         // Class = "Comp_SY_Div1";
+        System.out.println("cancel lecture was executed");
         Date today = new Date(Calendar.getInstance().getTimeInMillis());
-        rp.insert2(subject, Day, start_time, Class, today, "canceled", Classroom);
+        rp.insert2(subject, Day, start_time, Class, today, "canceled", Classroom, Teacher);
     }
 
-    public void add_lecture(String subject, String Day, int start_time, String Class, String Classroom) {
+    public void add_lecture(String subject, String Day, int start_time, String Class, String Classroom, String Teacher) {
         Date today = new Date(Calendar.getInstance().getTimeInMillis());
-        rp.insert2(subject, Day, start_time, Class, today, "Extra", Classroom);
+        rp.insert2(subject, Day, start_time, Class, today, "Extra", Classroom, Teacher);
     }
 
     public time_slot[][] create_time_table(String Class) {
         String query = "select * from main where Class = '" + Class + "'";
         String query2 = "SELECT * FROM changesInTimetable WHERE YEARWEEK(CancelDate) = YEARWEEK(CURDATE()) AND Class = '"
-                + Class + "'"+" AND changeType = 'canceled'";
+                + Class + "'" + " AND changeType = 'canceled'";
         String query3 = "SELECT * FROM changesInTimetable WHERE YEARWEEK(CancelDate) = YEARWEEK(CURDATE()) AND Class = '"
-                + Class + "'"+"AND changeType = 'Extra'";
+                + Class + "'" + "AND changeType = 'Extra'";
 
         time_slot[][] days = new time_slot[7][];
         List<lecture> li = rp.getAll(query);
@@ -39,10 +40,11 @@ public class timetable_service_layer {
             System.out.println("lectures canceled are" + l);
         }
 
+        // initializing days
         for (int i = 0; i < 7; i++) {
             time_slot[] day = new time_slot[9];
             days[i] = day;
-            for (int j = 0; j < 9; j++) 
+            for (int j = 0; j < 9; j++)
                 days[i][j] = new time_slot();
         }
         Iterator<lecture> it = li.iterator();
@@ -58,7 +60,8 @@ public class timetable_service_layer {
             day_no = this.giveNumber(Day);
             if (day_no == -1) {
                 System.out.println(
-                        "there was a grave error where serial_no is" + lec.getSerial_no() +" value of lecture.day is " +lec.getDay());
+                        "there was a grave error where serial_no is" + lec.getSerial_no() + " value of lecture.day is "
+                                + lec.getDay());
                 continue;
             }
             if (lec.getSubject() == null)
@@ -67,11 +70,14 @@ public class timetable_service_layer {
             days[day_no][start_time - 9].setCLASS(lec.getCLASS());
         }
         for (lecture Lecture : lc) {
-            days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9].append_canceled_lecture(Lecture.getSubject(), Lecture.getClassroom());
+            days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9]
+                    .append_canceled_lecture(Lecture.getSubject(), Lecture.getClassroom());
         }
 
         for (lecture Lecture : le) {
-            days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9].append_extra_lecture(Lecture.getSubject(), Lecture.getClassroom());
+            // System.out.println(Lecture);
+            days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9].append_extra_lecture(Lecture.getSubject(),
+                    Lecture.getClassroom());
         }
 
         return days;
@@ -92,6 +98,9 @@ public class timetable_service_layer {
         for (lecture l : lc) {
             System.out.println("lectures canceled are" + l);
         }
+        for (lecture l : le) {
+            System.out.println("lectures canceled are" + l);
+        }
 
         for (int i = 0; i < 7; i++) {
             time_slot[] day = new time_slot[9];
@@ -110,31 +119,7 @@ public class timetable_service_layer {
             int day_no = -1;
             if (Day == null)
                 continue;
-            switch (Day) {
-                case "Monday":
-                    day_no = 0;
-                    break;
-                case "Tuesday":
-                    day_no = 1;
-                    break;
-                case "Wednesday":
-                    day_no = 2;
-                    break;
-                case "Thursday":
-                    day_no = 3;
-                    break;
-                case "Friday":
-                    day_no = 4;
-                    break;
-                case "Saturday":
-                    day_no = 5;
-                    break;
-                case "Sunday":
-                    day_no = 6;
-                    break;
-                default:
-                    continue;
-            }
+            day_no = this.giveNumber(Day);
             if (day_no == -1) {
                 System.out.println(
                         "there was a grave error where serial_no is" + lec.getSerial_no());
@@ -145,18 +130,77 @@ public class timetable_service_layer {
             days[day_no][start_time - 9].append_lecture(lec.getSubject(), lec.getClassroom());
             days[day_no][start_time - 9].setCLASS(lec.getCLASS());
         }
+        for (lecture Lecture : lc) {
+            days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9]
+                    .append_canceled_lecture(Lecture.getSubject(), Lecture.getClassroom());
+        }
+
+        for (lecture Lecture : le) {
+            days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9].append_extra_lecture(Lecture.getSubject(),
+                    Lecture.getClassroom());
+            System.out.println(" extra lectures  settings                   "
+                    + days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9].getExtra_lectures().get(0) + "   "
+                    + days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9].getExtra_classrooms().get(0));
+            System.out.println(" extra lectures  settings                   "
+                    + days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9].getExtra_lectures().get(0) + "   "
+                    + days[giveNumber(Lecture.getDay())][Lecture.getStart_time() - 9].getExtra_classrooms().get(0));
+        }
 
         return days;
     }
 
-    public List<String> getListOfColumns(String column) {
+    public List<String> getListOfSubjects(String column, String Class, String Teacher) {
         List<String> l;
         if (column.equals("Subject"))
-            l = rp.getSubjects();
+            l = rp.getSubjects(Class, Teacher);
         else {
             l = rp.getClasses();
         }
         return l;
+    }
+
+    public List<String> getListOfClassRooms() {
+        List<String> l = rp.getClassrooms();
+        return l;
+    }
+
+    public int findDayAndTimeById(String id, time_slot[][] days) {
+        int i, j;
+        for (i = 0; i < days.length; i++) {
+            for (j = 0; j < days[i].length; j++) {
+                if (id.equalsIgnoreCase(days[i][j].getId())) {
+                    return i * 10 + j;
+                }
+            }
+        }
+
+        System.out.println(
+                "biggggggggggg errrrrrrrrrrrrrrrrrrrrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr]\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n ");
+        return -1;
+    }
+
+    public String getNotification(String Class) {
+        String sql1 = "select * from changesInTimetable where Class='" + Class + "' AND changeType='Extra'";
+        String sql2 = "select * from changesInTimetable where Class='" + Class + "' AND changeType='canceled'";
+        List<lecture> lc = rp.getAllCanceled(sql2);
+        List<lecture> le = rp.getAllCanceled(sql1);
+        String Message = "";
+        if (lc.isEmpty() && le.isEmpty()) {
+            Message = "no notifications for today . Enjoy your day!!!!!!!!!!!";
+            return Message;
+        } else if (!le.isEmpty()) {
+            Message += "Extra lectures arranged are ";
+            for (lecture lecture : le) {
+                Message += lecture.getSubject() + ",";
+            }
+        } else if (!lc.isEmpty()) {
+            Message += " canceled lectures are ";
+            for (lecture lecture : lc) {
+                Message += lecture.getSubject() + ",";
+            }
+        }
+
+        return Message;
     }
 
     public String giveDay(int num) {

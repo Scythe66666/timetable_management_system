@@ -12,11 +12,16 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
     <link th:href="@{/assets/css/timetable-stylesheet.css}" rel="stylesheet">
-    <link th:href="@{/assets/css/timetable2-stylesheet.css}" rel="stylesheet">
+    <!-- <link th:href="@{/assets/css/timetable2-stylesheet.css}" rel="stylesheet"> -->
+    <link th:href="@{/assets/css/sidebar.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/popup.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css">
 </head>
 
 <body>
     <div th:replace="~{header::nav}"></div>
+    <div th:replace="~{student_timetable::sidebar}"></div>
+
     <div th:fragment="Timetable">
         <div style="align-content: center; align-items: center; margin: 0 auto; width: fit-content; overflow: auto;">
             <table class="rwd-table">
@@ -35,10 +40,13 @@
                 <tr th:each="day: ${time_table}">
                     <td class="days" style="color: yellow; font-weight: bold;"></td>
                     <td th:each="slot:${day}">
-                        <span th:each="var, index: ${slot.extra_lectures}">
+                        <span th:each="var, index : ${slot.extra_lectures}"
+                            th:with="classs = ${slot.extra_classrooms[__${index.index}__]}">
                             <span class="non-Empty" th:if="${var != 'NONE'}" style=" color: greenyellow;">
                                 <span th:if="${option != '2'}">
                                     <span th:text="${var != 'NONE'? var: ''}"></span>
+                                    <br>
+                                    <span th:text="'('+${classs}+')'"></span>
                                 </span>
                             </span>
                         </span>
@@ -52,10 +60,11 @@
                                     <span th:text="'('+${classs}+')'"></span>
                                 </span>
                                 <span th:if="${option == '2'}" style="margin: 0; padding: 0;">
-                                    <form th:action="@{'/cancelLecture?lecName=' + ${var}+'&file=timetable'}"
+                                    <form th:action="@{'/cancelLecture?lecName=' + ${var}+'&file='+${file_name}}"
                                         style="margin: 0; padding: 0;" method="post">
                                         <input type="text" th:value="${slot.id}" style="display: none;" name="id">
                                         <input type="text" th:value="${Class}" style="display: none;" name="Class">
+                                        <input type="text" th:value="${user}" style="display: none;" name="Teacher">
 
                                         <button type="submit">
                                             <span th:text="${var != 'none' and var != 'NONE' ? var : ''}"></span>
@@ -64,42 +73,52 @@
                                 </span>
                             </span>
                             <br>
-                            <span th:if="${option == '1' and #lists.isEmpty(slot.extra_lectures)}" style="display: block;">
+                            <span th:if="${option == '1' and #lists.isEmpty(slot.extra_lectures)}"
+                                style="display: block;">
                                 <span th:if="${var == 'none' || var == null || var == 'NONE'}" style="display: block;">
-                                    <form th:action="@{'/add_lecture'}" method="post">
+                                    <form th:action="@{'/timetable?option=3'}" method="get">
                                         <input type="text" th:value="${slot.id}" style="display: none;" name="id">
                                         <input type="text" th:value="${Class}" style="display: none;" name="Class">
                                         <input type="text" th:value="${Subject}" style="display: none;" name="Subject">
+                                        <input type="text" value="3" style="display: none;" name="option">
+                                        <!-- <input type="text" th:value="${Subject}" style="display: none;" name="Classroom"> -->
                                         <button type="submit">.
                                             <br>.
                                             <br>.
                                             <br>.
                                             <br>.
                                             <br>............</button>
+                                        <!-- the dots are to just increase the length of button to be pressed other wise the button was very small and we had to search for it-->
                                     </form>
                                 </span>
                             </span>
                         </span>
                         <span th:each="var, index: ${slot.canceled_lectures}">
-                            <span class="non-Empty" th:if="${var != 'NONE'}" style="text-decoration: line-through; color: red;">
+                            <span class="non-Empty" th:if="${var != 'NONE'}"
+                                style="text-decoration: line-through; color: red;">
                                 <span th:if="${option != '2'}">
                                     <span th:text="${var != 'NONE'? var: ''}"></span>
                                 </span>
                             </span>
                         </span>
                     </td>
-                    <!-- <td> <a role="button" class="update" th:href="@{/form2(name = ${grade.name})}">Update</a> </td> -->
                 </tr>
             </table>
         </div>
     </div>
-    <div style="display: flex; justify-content: center; font-size: 1.5rem;">
+    <!-- <div style="display: flex; justify-content: center; font-size: 1.5rem;">
         <div class="flex-containerr">
-            <div class="box">
+            <div>
                 <form th:action="@{'/timetable?option=1'}" style="color: red;">
-                    <button type="submit" style="font-size: 1.7rem;"> Arrange a lecture</button>
+                    <button type="submit" style="font-size: 1.7rem; color: palevioletred;"> Arrange a lecture</button>
                     <label>Subject:</label>
                     <select id="gender" name="Subject">
+                        <option th:each="var:${list_subjects}">
+                            <span th:text="${var}"></span>
+                        </option>
+                    </select>
+                    <label>Classroom:</label>
+                    <select id="gender" name="Classroom">
                         <option th:each="var:${list_subjects}">
                             <span th:text="${var}"></span>
                         </option>
@@ -108,16 +127,20 @@
                     <input type="text" th:value="${Class}" style="display: none;" name="Class">
                 </form>
             </div>
-            <div class="box">
+            <div style=" color: palevioletred;">
                 <a th:href="@{'/timetable?option=2&Class='+${Class}}">cancel a lecture</a>
             </div>
         </div>
+    </div> -->
+    <div th:replace="~{popUp::popUp}"></div> 
+    <div th:if="${option=='3'}">
+        <div th:replace="~{popUp::popUp2}"></div>
     </div>
     <span th:if="${option == '1'}">
         <script th:src="@{/assets/js/add_lecture.js}"></script>
     </span>
     <script th:src="@{/assets/js/days.js}"></script>
-    <!-- <script th:src="@{/assets/js/add_lecture.js}"></script> -->
+    <script th:src="@{/assets/js/sidebar.js}"></script>
+    <script th:src="@{/assets/js/popup.js}"></script>
 </body>
-
 </html>
